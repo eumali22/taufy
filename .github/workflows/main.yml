@@ -6,7 +6,7 @@ name: Debug Cron
 on:
   # Triggers the workflow every 10 minutes
   schedule:
-    - cron: "*/3 * * * *"
+    - cron: "*/5 * * * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
