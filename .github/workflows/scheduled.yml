@@ -1,8 +1,8 @@
-name: NodeJS: build and run
+name: "NodeJS: build and run"
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/10 * * * *"
 
 jobs:
   build:
