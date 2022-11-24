@@ -1,0 +1,14 @@
+{
+  "name": "taufy",
+  "version": "1.0.0",
+  "description": "Tracking Account Updater for YNAB",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Erick Kristofer Umali",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  }
+}
