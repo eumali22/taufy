@@ -4,7 +4,7 @@
   "description": "Tracking Account Updater for YNAB",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "build": "tsc --build"
   },
   "author": "Erick Kristofer Umali",
   "license": "MIT",
