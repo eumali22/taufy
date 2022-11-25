@@ -1,12 +1,14 @@
 name: "NodeJS: build and run"
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 1 * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
 
     strategy:
       matrix:
@@ -21,6 +23,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Build
+      env:
+        YNAB_TOKEN: ${{ secrets.YNAB_TOKEN }}
+        BUDGET_ID: ${{ secrets.BUDGET_ID }}
+        ETORO_ACCT_ID: ${{ secrets.ETORO_ACCT_ID }}
+        BINANCE_ACCT_ID: ${{ secrets.BINANCE_ACCT_ID }}
+        COL_ACCT_ID: ${{ secrets.COL_ACCT_ID }}
+        BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+        BINANCE_SECRET_KEY: ${{ secrets.BINANCE_SECRET_KEY }}
       run: |
         npm ci
         npm run build

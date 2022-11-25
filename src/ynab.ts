@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 
 type BudgetJson = {
   data: {
@@ -29,7 +29,7 @@ export const getAllBudgets = async (token: string) => {
 }
 
 export const postTransaction = async (token: string, budgetId: string, payload: object) => {
-  const response = await fetch(`https://api.youneedabudget.com/v1//budgets/${budgetId}/transactions`, {
+  const response = await fetch(`https://api.youneedabudget.com/v1/budgets/${budgetId}/transactions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -38,4 +38,28 @@ export const postTransaction = async (token: string, budgetId: string, payload: 
     body: JSON.stringify(payload)
   });
   return response;
+}
+
+export const getLatestAccountTransactions = async (token: string, budgetId: string, accountId: string, sinceDate: string) => {
+  const response = await fetch(`https://api.youneedabudget.com/v1/budgets/${budgetId}/accounts/${accountId}/transactions?since_date=${sinceDate}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  const json = await response.json();
+  return json.data;
+}
+
+export const getAccountBalance = async (token: string, budgetId: string, accountId: string) => {
+  const response = await fetch(`https://api.youneedabudget.com/v1/budgets/${budgetId}/accounts/${accountId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  const json = await response.json();
+  return json.data.account.balance;
 }
