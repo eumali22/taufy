@@ -94,9 +94,15 @@ export const getAllUserAssets = async () => {
 
 export const getAllAssetsValueInBTC = async () => {
   const assets = await getAllUserAssets();
-  return assets.reduce((pVal, cVal) => {
-    return pVal + parseFloat(cVal.btcValuation);
-  }, 0.0);
+  let acc = 0.0;
+  for (let i = 0; i < assets.length; i++) {
+    acc += parseFloat(assets[i].btcValuation);
+  }
+  return acc;
+  
+  // return assets.reduce((pVal, cVal) => {
+  //   return pVal + parseFloat(cVal.btcValuation);
+  // }, 0.0);
 }
 
 // this function contains expensive calls. to be deprecated

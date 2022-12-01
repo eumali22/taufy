@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { getAllAssetsValueInBTC } from './binance.js';
+import { generateSignature, getAllAssetsValueInBTC } from './binance.js';
 import { convertBTCtoPHP } from './coingecko.js';
 import { getAccountBalance, getLatestAccountTransactions, postTransaction } from './ynab.js';
 import * as core from '@actions/core';
@@ -11,6 +11,15 @@ const budgetId = process.env.BUDGET_ID || '';
 const binanceAccountId = process.env.BINANCE_ACCT_ID || '';
 
 (async function() {
+  
+  // const timestamp = new Date().getTime();
+  // const hmacParam = `timestamp=${timestamp}&recvWindow=20000&needBtcValuation=true`;
+  // const signature = generateSignature(hmacParam);
+  // console.log(timestamp);
+  // console.log(signature);
+  
+  // return;
+
   // const price = await getPrice('ETHUSDT');
   // console.log(price);
   
