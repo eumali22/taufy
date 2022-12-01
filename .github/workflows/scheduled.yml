@@ -2,9 +2,9 @@ name: "NodeJS: build and run"
 
 on:
   workflow_dispatch:
-  schedule:
+  # schedule:
     # run daily every 1am UTC
-    - cron: "0 1 * * *"
+    # - cron: "0 1 * * *"
 
 jobs:
   build:
