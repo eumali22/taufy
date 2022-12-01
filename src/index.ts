@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { generateSignature, getAllAssetsValueInBTC } from './binance.js';
+import { generateSignature, getAllAssetsValueInBTC, getServerTime } from './binance.js';
 import { convertBTCtoPHP } from './coingecko.js';
 import { getAccountBalance, getLatestAccountTransactions, postTransaction } from './ynab.js';
 import * as core from '@actions/core';
@@ -45,22 +45,24 @@ const binanceAccountId = process.env.BINANCE_ACCT_ID || '';
 
   try {
     const binanceBalance = await getAccountBalance(ynabToken, budgetId, binanceAccountId);
-    // console.log(`YNAB Binance account balance: ${binanceBalance}`);
+    console.log(`YNAB Binance account balance: ${binanceBalance}`);
   
     const dateToday = new Date();
     const isoDateFormat = dateToday.toISOString().split('T')[0];
-    // console.log(`Transaction date: ${isoDateFormat}`);
+    console.log(`Transaction date: ${isoDateFormat}`);
     
+    // console.log('server time: ' + await getServerTime());
+    // console.log('system time: ' + new Date().getTime());
   
     /* Fetch Total Binance Spot Value */
     const btcVal = await getAllAssetsValueInBTC();
-    // console.log(`Total BTC Value of asset: ${btcVal}`);
-  
+    console.log(`Total BTC Value of asset: ${btcVal}`);
+
     const phpVal = await convertBTCtoPHP(btcVal);
-    // console.log(`PHP Value of Total BTC: ${phpVal}`);
+    console.log(`PHP Value of Total BTC: ${phpVal}`);
   
     const binanceNewBalance = Math.round(phpVal * 1000);
-    // console.log(`Today's binance balance after ynab translation: ${binanceNewBalance}`);
+    console.log(`Today's binance balance after ynab translation: ${binanceNewBalance}`);
     
     const diff = binanceNewBalance - binanceBalance;
   

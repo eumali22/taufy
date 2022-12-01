@@ -77,7 +77,7 @@ type Asset = {
 }
 
 export const getAllUserAssets = async () => {
-  const timestamp = new Date().getTime();
+  const timestamp = new Date().getTime() - 1000; // hack. this worked before but stopped altogether. probably due to Binance server time
   const hmacParam = `timestamp=${timestamp}&recvWindow=10000&needBtcValuation=true`;
   const signature = generateSignature(hmacParam);
   const response = await fetch(`https://api.binance.com/sapi/v3/asset/getUserAsset?${hmacParam}&signature=${signature}`, {
@@ -88,21 +88,25 @@ export const getAllUserAssets = async () => {
     }
   });
 
-  const json: Array<Asset> = await response.json();
+  const json: Array<Asset> | {code: number, msg: string} = await response.json();
   return json;
+}
+
+export const getServerTime = async () => {
+  const response = await publicCall('https://api.binance.com/api/v1/time');
+  const json = await response.json();
+  return json.serverTime;
 }
 
 export const getAllAssetsValueInBTC = async () => {
   const assets = await getAllUserAssets();
-  let acc = 0.0;
-  for (let i = 0; i < assets.length; i++) {
-    acc += parseFloat(assets[i].btcValuation);
+  if (!Array.isArray(assets) && assets.msg) {
+    throw new Error(assets.msg);
+  } else {
+    return (assets as Array<Asset>).reduce((pVal, cVal) => {
+      return pVal + parseFloat(cVal.btcValuation);
+    }, 0.0);
   }
-  return acc;
-  
-  // return assets.reduce((pVal, cVal) => {
-  //   return pVal + parseFloat(cVal.btcValuation);
-  // }, 0.0);
 }
 
 // this function contains expensive calls. to be deprecated
