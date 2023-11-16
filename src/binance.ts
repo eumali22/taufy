@@ -38,7 +38,7 @@ const publicCall = async (url: string) => {
 
 type PriceJson = {
   symbol: string,
-  price: string
+  price: number
 }
 
 export const getPrice = async (sym: string) => {

@@ -1,8 +1,9 @@
 import * as dotenv from 'dotenv';
-import { generateSignature, getAllAssetsValueInBTC, getServerTime } from './binance.js';
+import { generateSignature, getAllAssetsValueInBTC, getPrice, getServerTime } from './binance.js';
 import { convertBTCtoPHP } from './coingecko.js';
 import { getAccountBalance, getLatestAccountTransactions, postTransaction } from './ynab.js';
 import * as core from '@actions/core';
+import { convertUSDtoPHP } from './geo.js';
 
 dotenv.config();
 
@@ -20,9 +21,6 @@ const binanceAccountId = process.env.BINANCE_ACCT_ID || '';
   
   // return;
 
-  // const price = await getPrice('ETHUSDT');
-  // console.log(price);
-  
   // const bal = await getBTCBalance();
 
   // const btcVal = await getAllAssetsValueInBTC();
@@ -58,7 +56,14 @@ const binanceAccountId = process.env.BINANCE_ACCT_ID || '';
     const btcVal = await getAllAssetsValueInBTC();
     console.log(`Total BTC Value of asset: ${btcVal}`);
 
-    const phpVal = await convertBTCtoPHP(btcVal);
+    const btcRate = await getPrice('BTCUSDT');
+    console.log(`Current BTC price (in USD): ${btcRate}`);
+
+    const usdVal = btcRate * btcVal;
+    console.log(`USD Value of Total BTC: ${usdVal}`);
+
+    // const phpVal = await convertBTCtoPHP(btcVal);
+    const phpVal = await convertUSDtoPHP(usdVal);
     console.log(`PHP Value of Total BTC: ${phpVal}`);
   
     const binanceNewBalance = Math.round(phpVal * 1000);
@@ -93,6 +98,8 @@ const binanceAccountId = process.env.BINANCE_ACCT_ID || '';
   
     // console.log(binancePayload);
     
+    // return; 
+
     const response = await postTransaction(ynabToken, process.env.BUDGET_ID || '', binancePayload);
     const msg = `Create transaction ${response.status === 201 ? 'success' : 'failed'}: ${response.status} ${response.statusText}`;
     console.log(msg);
